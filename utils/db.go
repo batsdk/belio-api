@@ -6,5 +6,5 @@ import (
 )
 
 func MigrateDB() {
-	config.DB.AutoMigrate(&models.User{})
+	config.DB.AutoMigrate(&models.User{}, &models.Link{})
 }
