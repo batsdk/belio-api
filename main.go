@@ -7,6 +7,7 @@ import (
 	"belio-api/routes"
 	"belio-api/services"
 	"belio-api/utils"
+
 	"github.com/joho/godotenv"
 )
 
@@ -16,11 +17,20 @@ func main() {
 	config.InitDB()
 	utils.MigrateDB()
 
+	// ! REGISTERING SERVICES AND REPOS SHOULD BE DONE WITH DI
+	// ! TODO -> Use DI
+
 	userRepo := repositories.NewUserRepository(config.DB)
 	userService := services.NewUserService(userRepo)
 	userController := controllers.NewUserController(userService)
 
-	router := routes.SetupRouter(userController)
+	linkRepository := repositories.NewLinkRepository(config.DB)
+	linkService := services.NewLinkService(linkRepository)
+	linkController := controllers.NewLinkController(linkService)
+
+	// Setup router
+	router := routes.SetupRouter(userController, linkController)
+
 	router.Run(":8080")
 
 }
