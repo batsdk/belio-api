@@ -12,6 +12,7 @@ func SetupRouter(userController *controllers.UserController) *gin.Engine {
 	{
 		api.POST("/users", userController.CreateUser)
 		api.GET("/users", userController.GetUsers)
+		api.GET("/test", userController.Test)
 	}
 
 	return router

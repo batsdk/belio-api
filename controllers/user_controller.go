@@ -42,3 +42,7 @@ func (ctrl *UserController) GetUsers(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"users": users})
 }
+
+func (ctrl *UserController) Test(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"tests": "test value"})
+}
