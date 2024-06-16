@@ -17,9 +17,6 @@ func main() {
 	config.InitDB()
 	utils.MigrateDB()
 
-	// ! REGISTERING SERVICES AND REPOS SHOULD BE DONE WITH DI
-	// ! TODO -> Use DI
-
 	userRepo := repositories.NewUserRepository(config.DB)
 	userService := services.NewUserService(userRepo)
 	userController := controllers.NewUserController(userService)
