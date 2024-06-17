@@ -4,11 +4,12 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Email    string `gorm:"not null" json:"email" gorm:"unique"`
-	SubID    string `json:"sub_id" gorm:"unique"`
-	Links    []Link `json:"links"`
+	Name         string `json:"name"`
+	Username     string `json:"username"`
+	Email        string `gorm:"not null" json:"email" gorm:"unique"`
+	SubID        string `json:"sub_id" gorm:"unique"`
+	Links        []Link `json:"links"`
+	ProfilePhoto string `json:"profile_photo"`
 }
 
 type Link struct {
