@@ -9,4 +9,5 @@ func UserRoutes(router *gin.RouterGroup, userController *controllers.UserControl
 	router.POST("/users", userController.CreateUser)
 	router.GET("/users", userController.GetUsers)
 	router.GET("/test", userController.Test)
+	router.POST("/users/:userId/photo", userController.UploadProfilePhoto)
 }
