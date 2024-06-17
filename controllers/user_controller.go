@@ -3,7 +3,10 @@ package controllers
 import (
 	"belio-api/models"
 	"belio-api/services"
+	"belio-api/utils"
 	"net/http"
+	"os"
+	filepath2 "path/filepath"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -55,14 +58,42 @@ func (ctrl *UserController) UploadProfilePhoto(c *gin.Context) {
 		return
 	}
 
+	err = ctrl.service.FindUserById(uint(userId))
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User with ID does not exist"})
+		return
+	}
+
 	//	Get the Photo from req
+	file, err := c.FormFile("profile")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
+		return
+	}
 
 	//	Save the file locally
+	filepath := filepath2.Join("/tmp", file.Filename)
+
+	// Ensure the temporary file is deleted after processing
+	defer os.Remove(filepath)
+
+	if err := c.SaveUploadedFile(file, filepath); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error(), "detail": "Unable to save the file"})
+		return
+	}
 
 	//	Save to CDN
+	var cloudinaryUrl string
+	cloudinaryUrl, err = utils.UploadToCloudinary(filepath)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload to Cloudinary"})
+		return
+	}
 
 	//	Update User's profile Photo
-	user, err := ctrl.service.UpdateUserProfileImage(uint(userId), "somelinkhere")
+	user, err := ctrl.service.UpdateUserProfileImage(uint(userId), cloudinaryUrl)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err})
