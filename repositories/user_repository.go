@@ -25,3 +25,26 @@ func (r *UserRepository) FindAll() ([]models.User, error) {
 
 	return users, err
 }
+
+func (r *UserRepository) FindUserById(id uint) (models.User, error) {
+	var user models.User
+	err := r.DB.First(&user, id).Error
+
+	return user, err
+}
+
+func (r *UserRepository) UpdateUserProfileImage(id uint, link string) (models.User, error) {
+	var user models.User
+	err := r.DB.Where("id = ?", id).First(&user).Error
+
+	if err != nil {
+		return user, err
+	}
+
+	user.ProfilePhoto = link
+	if err := r.DB.Save(&user).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
