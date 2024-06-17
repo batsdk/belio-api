@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"belio-api/models"
+
 	"gorm.io/gorm"
 )
 
@@ -26,11 +27,15 @@ func (r *UserRepository) FindAll() ([]models.User, error) {
 	return users, err
 }
 
-func (r *UserRepository) FindUserById(id uint) (models.User, error) {
+func (r *UserRepository) FindUserById(id uint) error {
 	var user models.User
 	err := r.DB.First(&user, id).Error
 
-	return user, err
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
 func (r *UserRepository) UpdateUserProfileImage(id uint, link string) (models.User, error) {
